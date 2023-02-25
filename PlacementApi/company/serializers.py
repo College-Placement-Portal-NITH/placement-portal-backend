@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Company, HR_details, JNF, JNF_placement, JNF_intern
 from course.models import Specialization
-from course.serializers import SpecialisationSerializer
+from course.serializers import SpecializationSerializer
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,7 +35,7 @@ class JNFPlacementSerializer(serializers.ModelSerializer):
     # jnf = JNFSerializer()
     # jnf = serializers.StringRelatedField()
     jnf = JnfRelatedfield(queryset = JNF.objects.all())
-    eligible_batches = SpecialisationSerializer(many = True)
+    eligible_batches = SpecializationSerializer(many = True)
     class Meta:
         model = JNF_placement
         fields = '__all__'
@@ -66,7 +66,6 @@ class JNFPlacementSerializer(serializers.ModelSerializer):
             specialization = Specialization.objects.get(course = batches['course'],branch_name = batches["branch_name"])
             new_batches.append(specialization)
 
-
         instance.eligible_batches.set(new_batches)
 
         instance.save()
@@ -76,7 +75,7 @@ class JNFInternSerializer(serializers.ModelSerializer):
     # jnf = JNFSerializer()
     # jnf = serializers.StringRelatedField()
     jnf = JnfRelatedfield(queryset = JNF.objects.all())
-    eligible_batches = SpecialisationSerializer(many = True)
+    eligible_batches = SpecializationSerializer(many = True)
     class Meta:
         model = JNF_intern
         fields = '__all__'
@@ -108,7 +107,6 @@ class JNFInternSerializer(serializers.ModelSerializer):
         for batches in eligible_batches:
             specialization = Specialization.objects.get(course = batches['course'],branch_name = batches["branch_name"])
             new_batches.append(specialization)
-
 
         instance.eligible_batches.set(new_batches)
 

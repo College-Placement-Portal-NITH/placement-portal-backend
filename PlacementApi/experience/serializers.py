@@ -34,5 +34,3 @@ class ExperienceSerializer(serializers.ModelSerializer):
         experience = Experience(**validated_data)
         experience.save()
         return experience
-
-        

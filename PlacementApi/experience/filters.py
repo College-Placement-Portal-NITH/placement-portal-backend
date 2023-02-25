@@ -10,10 +10,6 @@ class ExperienceFilter(django_filters.FilterSet):
     roles = CharInFilter(field_name='roles__role',lookup_expr='in')
     year = django_filters.NumberFilter(field_name='datetime',lookup_expr='year__iexact')
 
-
     class Meta:
         model = Experience
         fields = ('company','year','roles','selected','jobtype','difficulty')
-    
-
-

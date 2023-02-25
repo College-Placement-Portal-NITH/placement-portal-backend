@@ -5,7 +5,7 @@ urlpatterns = [
     # path('',views.CompanyAPIView.as_view()),
     path('',views.CompanyListAPIView.as_view()),
     path('<str:name>',views.CompanyDetailAPIView.as_view()),
-    path('<str:name>/hr/',views.HRListAPIView.as_view()),
+    path('<str:company>/hr/',views.HRRetrieveAPIView.as_view()),
     path('<str:name>/hr/<int:pk>/',views.HRDestroyAPIView.as_view()),
     path('add-hr/',views.HRCreateAPIView.as_view()),
     path('jnfs/',views.JNFList.as_view()),

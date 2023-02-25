@@ -41,5 +41,3 @@ class DriveList(generics.ListCreateAPIView):
 class DriveDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drive.objects.select_related('company')
     serializer_class = DriveSerializer
-
-    

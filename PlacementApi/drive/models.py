@@ -6,7 +6,7 @@ from django.core.validators import RegexValidator, FileExtensionValidator, MaxVa
 # Create your models here.
 
 class Role(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     def __str__(self) -> str:
         return self.name
 
@@ -51,4 +51,3 @@ class JobRoles(models.Model):
     eligible_batches = models.ManyToManyField(Specialization) # add only specialisations which are eligible
     def __str__(self) -> str:
         return str(self.drive.__str__()) + " " + self.role.name
-

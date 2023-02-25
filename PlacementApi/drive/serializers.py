@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Role,JobRoles,Drive
 from company.models import JNF_placement,JNF_intern,Company,JNF
 from course.models import Specialization
-from course.serializers import SpecialisationSerializer
+from course.serializers import SpecializationSerializer
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from pathlib import Path
@@ -11,7 +11,7 @@ from django.core.files import File
 
 class JobRolesSerializer(serializers.ModelSerializer):
     role = serializers.SlugRelatedField(queryset=Role.objects.all(), slug_field="name")
-    eligible_batches = SpecialisationSerializer(many= True)
+    eligible_batches = SpecializationSerializer(many= True)
     drive = serializers.PrimaryKeyRelatedField(queryset = Drive.objects.all(),write_only = True)
     class Meta:
         model = JobRoles
@@ -55,8 +55,6 @@ class DriveSerializer(serializers.ModelSerializer):
                 # raise serializers.ValidationError("Corresponding placement details not found")
         # validated_data["job_desc_pdf"] = jnf.job_desc_pdf
 
-       
-
         drive = Drive(**validated_data)
         drive.save()
         return drive
@@ -90,7 +88,6 @@ class DriveSerializer(serializers.ModelSerializer):
             else:
                 print(new_role.errors)
                 print("Invalid Data for Job Role")
-
 
         instance.job_roles.set(new_job_roles)
 

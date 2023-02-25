@@ -3,7 +3,7 @@ from course.models import Course,Specialization
 from company.models import Company
 from drive.models import JobRoles, Role
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator, FileExtensionValidator, MaxValueValidator
+from django.core.validators import RegexValidator, FileExtensionValidator, MinValueValidator, MaxValueValidator
 from validators import Validate_file_size
 from drive.models import Drive
 from django.utils import timezone
@@ -87,12 +87,14 @@ class Student(models.Model):
     class_12_school = models.CharField(default="",max_length=200)
     class_12_board = models.CharField(default="",max_length=200)
     class_12_perc = models.FloatField()
+    class_12_domicile = models.ForeignKey(State, on_delete=models.CASCADE)
     active_backlog = models.SmallIntegerField()
     total_backlog = models.SmallIntegerField()
     jee_mains_rank = models.IntegerField(null= True) 
     linkedin = models.CharField(default="",max_length=200)
     pwd = models.BooleanField(default=False)
     disability_type = models.CharField(max_length=50,choices=[('NONE','None'),('HEARING_IMPAIRMENT', 'Hearing Impairment'),('VISUAL_IMPAIRMENT', 'Visual Impairment'),('MOBILITY_IMPAIRMENT', 'Mobility Impairment'),('SPEECH_IMPAIRMENT', 'Speech Impairment'),('COGNITIVE_IMPAIRMENT', 'Cognitive Impairment'),('OTHER', 'Other')])
+    disability_percentage = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     gap_12_ug = models.IntegerField(default=0)
     gap_ug_pg = models.IntegerField(default=0)
     banned_date = models.DateTimeField(default=timezone.datetime(2023,1,1,12,0,0))
@@ -129,7 +131,7 @@ class StudentNotSitting(models.Model):
     reason = models.CharField(max_length=40, choices=reasons)
     def __str__(self) -> str:
         return self.student.roll.username
-    
+
 
 class ClusterChosen(models.Model):
     student = models.OneToOneField(StudentPlacement,on_delete=models.CASCADE,related_name="cluster")
@@ -140,9 +142,8 @@ class ClusterChosen(models.Model):
         return self.student.student.roll.username
 
 
-
 class Recruited(models.Model):
-    drive = models.ForeignKey(Drive,on_delete=models.CASCADE)
+    # drive = models.ForeignKey(Drive,on_delete=models.CASCADE)
     job_role = models.ForeignKey(JobRoles, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -167,18 +168,18 @@ class BaseClass(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     ctc = models.FloatField() # in LPA
+    session = models.CharField(max_length=7,validators=[RegexValidator(regex=r'\d{4}[-]\d{2}$')])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    profile = models.ForeignKey(Role, on_delete=models.CASCADE)
     class Meta:
         abstract = True
 
 
 class PPO(BaseClass):
-    session = models.CharField(max_length=7,validators=[RegexValidator(regex=r'\d{4}[-]\d{2}$')])
+    pass
 
 # For Offcampus placements
 class Offcampus(BaseClass):
     # Add the company in Company Table if it does not exist in case of Offcampus placements
-    profile = models.ForeignKey(Role, on_delete=models.CASCADE)
-    
-
+    pass

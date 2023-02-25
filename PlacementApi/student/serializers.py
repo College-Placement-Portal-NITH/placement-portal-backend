@@ -50,7 +50,7 @@ class StudentSerializer(serializers.ModelSerializer):
     # student_intern = StudentInternSerializer(read_only = True,required = False)
 
     def get_isBanned(self,item):
-       return (item.banned_date < timezone.now() and item.over_date > timezone.now())
+        return (item.banned_date < timezone.now() and item.over_date > timezone.now())
     
     class Meta:
         model = Student
@@ -60,15 +60,13 @@ class StudentSerializer(serializers.ModelSerializer):
 
         user_data = validated_data["roll"].get("username")
         validated_data.pop('roll')
-     
+
         course_data = validated_data["course"].get('name')
         validated_data.pop('course')
         branch_data = validated_data["branch"].get('branch_name')
         validated_data.pop('branch')
         city_data = validated_data["city"].get("name")
         validated_data.pop('city')
-      
-
 
         user = User.objects.get(username = user_data)
         course = Course.objects.get(name = course_data)
@@ -76,7 +74,6 @@ class StudentSerializer(serializers.ModelSerializer):
         branch = Specialization.objects.get(Q(branch_name = branch_data) & Q(course = course))
         print(branch)
         city = City.objects.get(name = city_data)
-
 
         student = Student(roll = user,course = course,branch = branch,city = city,**validated_data)
         student.save()
@@ -104,8 +101,6 @@ class StudentSerializer(serializers.ModelSerializer):
         instance.linkedin = validated_data.get('linkedin',instance.linkedin)
         instance.save()
         return instance
-
-    
 
 
 class StudentPlacementSerializer(serializers.ModelSerializer):
@@ -171,26 +166,13 @@ class StudentNotSittingSerializer(serializers.ModelSerializer):
         return not_sitting_student
 
 
-
-
 class PlacedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Placed
         fields = '__all__'
 
+
 class InternedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interned
         fields = '__all__'
-
-
-
-
-
-        
-
-
-
-        
-        
-      

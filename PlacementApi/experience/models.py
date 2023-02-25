@@ -37,4 +37,3 @@ class Experience(models.Model):
     selected = models.BooleanField(default=False)
     anonymity = models.BooleanField(default=False)
     jobtype = models.CharField(choices=jtype,max_length=100)
-

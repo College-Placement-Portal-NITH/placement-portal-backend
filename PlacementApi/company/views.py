@@ -20,14 +20,15 @@ class CompanyListAPIView(generics.ListCreateAPIView):
 class HRCreateAPIView(generics.CreateAPIView):
     serializer_class = HRSerializer
     queryset = HR_details.objects.prefetch_related().all()
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
 
-class HRListAPIView(generics.ListAPIView):
+class HRRetrieveAPIView(generics.ListAPIView):
     serializer_class = HRSerializer
+    queryset = HR_details.objects.all()
+    lookup_field = ('company__name')
+    lookup_url_kwarg = ('company')
     def get_queryset(self):
-        company = self.kwargs['name']
-        return HR_details.objects.filter(company__name = company)
+        print(self.kwargs)
+        return HR_details.objects.filter(company__name = self.kwargs["company"])
 
 class HRDestroyAPIView(generics.DestroyAPIView):
     serializer_class = HRSerializer

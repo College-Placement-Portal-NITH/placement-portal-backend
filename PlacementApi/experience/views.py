@@ -39,11 +39,3 @@ class ExperienceList(generics.ListCreateAPIView):
 class ExperienceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
-    
-
-
-        
-
-
-        
-

@@ -12,8 +12,8 @@ urlpatterns = [
     path('detailnotsitting/',StudentNotSittingList.as_view(),name=  "list-notsitting-student"),
     path('detailnotsitting/<str:pk>',StudentNotSittingDetail.as_view(),name=  "detail-notsitting-student"),
     path('basicstats/',BasicStats.as_view(),name = "basic-stats-info"),
-    path('orderwise/',CommonQueries.as_view(),name ="stats-by-order")
-   
+    path('orderwise/',CommonQueries.as_view(),name ="stats-by-order"),
+    path('companystats/',CommonQueries.as_view(),name ="company-related-stats")
     # path('cluster/',clusterchoosen.as_view(),name=  "detail-intern-student"),
 
 

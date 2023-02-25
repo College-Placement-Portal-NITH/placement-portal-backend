@@ -78,7 +78,7 @@ TEMPLATES = [
         },
     },
 ]
- 
+
 WSGI_APPLICATION = 'PlacementApi.wsgi.application'
 
 # Database
@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'PlacementApi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'college',
+        'NAME': os.environ.get("DATABASE_NAME") or 'college',
         'USER': 'root',
         'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
         'HOST': 'localhost',  

@@ -33,7 +33,6 @@ class PPOList(generics.ListCreateAPIView):
     filterset_class = PPOFilter
     pagination_class = CustomPagination
 
-           
 
 class StudentList(APIView):
     pagination_class = CustomPagination
@@ -164,8 +163,6 @@ class StudentInternDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class StudentNotSittingList(APIView):
     filter_class = StudentNSFilter
     pagination_class = CustomPagination
@@ -183,7 +180,6 @@ class StudentNotSittingList(APIView):
             new_student_ns.save() #owner = request.user    
             return Response(status=status.HTTP_201_CREATED)
         return Response(new_student_ns.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class StudentNotSittingDetail(APIView):
@@ -206,19 +202,11 @@ class StudentNotSittingDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
-
-
-    
-
-
 # class clusterchoosen(APIView):
 #     def get(self,request):
 #         queryset = ClusterChosen.objects.all()
 #         seriallized = ClusterChosenSerializer(queryset,many = True)
 #         return Response(seriallized.data)
-
 
 
 class BasicStats(APIView):
@@ -293,23 +281,11 @@ class CommonQueries(APIView):
         paginator = self.pagination_class()
         queryset = paginator.paginate_queryset(queryset,request)
         return paginator.get_paginated_response(result) 
-            
 
+class CompanyRelatedQueries(APIView):
+    def get(self, request, *args, **kwargs):
+        session = request.query_params["session"]
+        jtype = request.query_params["jtype"]
+        company = request.query_params["company"]
 
-
-        
-   
-
-            
-
-        
-
-        
-
-        
-
-        
-            
-
-
-
+        return super().get(request, *args, **kwargs)
