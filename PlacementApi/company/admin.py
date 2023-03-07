@@ -3,11 +3,6 @@ from django.contrib import admin
 from .models import Company,HR_details,JNF,JNF_intern,JNF_placement
 # Register your models here.
 
-# admin.site.register(Company)
-@admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
-    # list_display = ('id',)
-    search_fields = ('name',)
 admin.site.register(JNF)
 admin.site.register(JNF_intern)
 admin.site.register(JNF_placement)

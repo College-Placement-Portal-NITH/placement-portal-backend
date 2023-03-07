@@ -42,10 +42,6 @@ class RolesList(generics.ListCreateAPIView):
 #         return HttpResponse("HII")
 
 
-
-
-
-
 class DriveList(generics.ListCreateAPIView):
     # queryset = Drive.objects.select_related('company')
     queryset = Drive.objects.all()
@@ -62,15 +58,15 @@ class DriveList(generics.ListCreateAPIView):
         driveserializer = DriveSerializer(data = request.data)
         if driveserializer.is_valid():
             drive = driveserializer.save()
-            # job_roles = request.data["job_roles"]
-            # for job_role in job_roles:
-            #     new_role = JobRolesSerializer(data={"drive":drive.pk,"role":job_role["role"],"ctc":job_role["ctc"], "cgpi":float(job_role["cgpi"]),"eligible_batches":job_role['eligible_batches']})
-            #     if(new_role.is_valid()):
-            #         new_role.save()
-            #     else:
-            #         print("inner")
-            #         print(new_role.errors)
-            #         print("Invalid Data for Job Role")
+            job_roles = request.data["job_roles"]
+            for job_role in job_roles:
+                new_role = JobRolesSerializer(data={"drive":drive.pk,"role":job_role["role"],"ctc":job_role["ctc"], "cgpi":float(job_role["cgpi"]),"eligible_batches":job_role['eligible_batches']})
+                if(new_role.is_valid()):
+                    new_role.save()
+                else:
+                    print("inner")
+                    print(new_role.errors)
+                    print("Invalid Data for Job Role")
             return Response(driveserializer.data)
         else:
             # print("outer")
@@ -80,8 +76,6 @@ class DriveList(generics.ListCreateAPIView):
 class DriveDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drive.objects.select_related('company')
     serializer_class = DriveSerializer
-<<<<<<< HEAD
-=======
     def put(self, request,pk):
         drive = Drive.objects.get(id = pk)
         serializer = DriveSerializer(instance=drive,data = request.data)
@@ -94,7 +88,3 @@ class DriveDetail(generics.RetrieveUpdateDestroyAPIView):
         if serializerRole.is_valid():
             serializerRole.save()
             return Response(serializer.data)
-        
-
-    
->>>>>>> dev

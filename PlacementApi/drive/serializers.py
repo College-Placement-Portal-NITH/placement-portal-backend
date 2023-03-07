@@ -11,17 +11,11 @@ from django.core.files import File
 
 class JobRolesSerializer(serializers.ModelSerializer):
     role = serializers.SlugRelatedField(queryset=Role.objects.all(), slug_field="name")
-<<<<<<< HEAD
     eligible_batches = SpecializationSerializer(many= True)
-=======
-    eligible_batches = SpecialisationSerializer(many= True)
-    # eligible_batches = serializers.PrimaryKeyRelatedField(queryset = Specialization.objects.all(),many = True)
->>>>>>> dev
     drive = serializers.PrimaryKeyRelatedField(queryset = Drive.objects.all(),write_only = True)
     class Meta:
         model = JobRoles
         fields = '__all__'
-       
 
     def create(self, validated_data):
         print(validated_data)
@@ -79,10 +73,6 @@ class DriveSerializer(serializers.ModelSerializer):
                 # raise serializers.ValidationError("Corresponding placement details not found")
         # validated_data["job_desc_pdf"] = jnf.job_desc_pdf
 
-<<<<<<< HEAD
-=======
-       
->>>>>>> dev
         drive = Drive(**validated_data)
         drive.save()
         return drive
@@ -104,22 +94,6 @@ class DriveSerializer(serializers.ModelSerializer):
         instance.job_type = validated_data.get('job_type',instance.job_type)
         instance.ctc = validated_data.get('ctc',instance.ctc)
         instance.session = validated_data.get('session',instance.session)
-<<<<<<< HEAD
-        job_roles = validated_data.get('job_roles')
-        
-        new_job_roles = []
-        for job_role in job_roles:
-            new_role = JobRolesSerializer(data={"role":job_role["role"],"ctc":job_role["ctc"], "cgpi":float(job_role["cgpi"]),"eligible_batches":job_role['eligible_batches']})
-            if(new_role.is_valid()):
-                instance = new_role.save()
-                new_job_roles.append(instance)
-            else:
-                print(new_role.errors)
-                print("Invalid Data for Job Role")
 
-        instance.job_roles.set(new_job_roles)
-
-=======
->>>>>>> dev
         instance.save()
         return instance

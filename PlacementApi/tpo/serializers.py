@@ -20,35 +20,6 @@ class CompanyAnnouncementSerializer(serializers.ModelSerializer):
         model = CompanyAnnouncement
         fields = '__all__'
 
-# class CombinedSerializer(serializers.Serializer):
-#     general_data = GeneralAnnouncementSerializer(many=True)
-#     company_data = CompanyAnnouncementSerializer(many=True)
-#     sorted_data = serializers.SerializerMethodField()
-
-#     def get_sorted_data(self, obj):
-#         combined_data = obj['general_data'] + obj['company_data']
-        # sorted_data = sorted(combined_data, key=lambda x: x['updated_at'])
-#         return sorted_data
-
-# class CombinedSerializer(serializers.Serializer):
-#     general = serializers.SerializerMethodField()
-#     company = serializers.SerializerMethodField()
-#     combined_data = serializers.SerializerMethodField()
-
-#     def get_general(self, obj):
-#         general = GeneralAnnouncement.objects.all().order_by('updated_at')
-#         return GeneralAnnouncementSerializer(general, many=True).data
-
-#     def get_company(self, obj):
-#         company = CompanyAnnouncement.objects.all().order_by('updated_at')
-#         return CompanyAnnouncementSerializer(company, many=True).data
-
-#     def get_combined_data(self,obj):
-#         print(obj)
-#         combined_data = self.general.data + self.company.data
-#         sorted_data = sorted(combined_data, key=lambda x: x['updated_at'])
-#         return sorted_data
-
 class ResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resources

@@ -10,14 +10,6 @@ from django.db.models import F, Value, CharField
 from django.db.models.functions import Concat
 
 # Create your views here.
-# class GeneralAnnouncementAPIView(generics.ListAPIView):
-#     queryset = GeneralAnnouncement.objects.all()
-#     serializer_class = GeneralAnnouncementSerializer
-
-# class CompanyAnnouncementAPIView(generics.ListAPIView):
-#     queryset = CompanyAnnouncement.objects.all()
-#     serializer_class = CompanyAnnouncementSerializer
-
 class AnnouncementAPIView(generics.ListAPIView):
     serializer_class_General = GeneralAnnouncementSerializer
     serializer_class_Company = CompanyAnnouncementSerializer
