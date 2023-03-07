@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from .models import *
+from .models import Student,StudentIntern,StudentNotSitting,StudentPlacement,PPO,Offcampus,Placed,Interned,City,Cluster,ClusterChosen,State
 from django.contrib.auth.models import User
-from course.models import *
+from course.models import Course,Specialization
+from company.models import Company
 from django.db.models import Q
+from django.utils import timezone
 
 
 class PPOSerializer(serializers.ModelSerializer):
@@ -106,7 +108,7 @@ class StudentPlacementSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self,validated_data):
-        print(validated_data)
+        # print(validated_data)
         cluster_1 = validated_data["cluster"].get('cluster_1')
         cluster_2 = validated_data["cluster"].get('cluster_2')
         cluster_3 = validated_data["cluster"].get('cluster_3')

@@ -77,7 +77,7 @@ class Student(models.Model):
     passing_year = models.IntegerField(validators=[RegexValidator(regex=r'\d{4}$')])
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     cgpi = models.FloatField(validators=[MaxValueValidator(10)])
-    gate_score = models.IntegerField(blank=True, null= True)
+    gate_score = models.FloatField(blank=True, null= True)
     cat_score = models.FloatField(blank=True, null = True)
     class_10_year = models.IntegerField(validators=[RegexValidator(regex=r'\d{4}$')])
     class_10_school = models.CharField(default="",max_length=200)

@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     # path('',views.CompanyAPIView.as_view()),
+    # path('refresh',views.RefreshDatabase,name = "add-company-data"),
     path('',views.CompanyListAPIView.as_view()),
     path('<str:name>',views.CompanyDetailAPIView.as_view()),
     path('<str:company>/hr/',views.HRRetrieveAPIView.as_view()),

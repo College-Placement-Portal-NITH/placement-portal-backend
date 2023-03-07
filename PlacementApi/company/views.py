@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponse
 from .models import Company, HR_details, JNF, JNF_placement, JNF_intern
 from .serializers import CompanySerializer, HRSerializer, JNFSerializer, JNFPlacementSerializer, JNFInternSerializer
 # from rest_framework.renderers import JSONRenderer
@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from rest_framework import generics, status
+from student.pagination import CustomPagination
 
 class CompanyDetailAPIView(generics.RetrieveUpdateAPIView):
     queryset = Company.objects.all()
@@ -16,6 +17,8 @@ class CompanyDetailAPIView(generics.RetrieveUpdateAPIView):
 class CompanyListAPIView(generics.ListCreateAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    pagination_class = CustomPagination
+
     def post(self,request):
         new_company = self.serializer_class(data= request.data)
         if new_company.is_valid():

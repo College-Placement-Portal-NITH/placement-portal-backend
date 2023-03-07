@@ -14,7 +14,7 @@ class Specialization(models.Model):
         unique_together = ('branch_name', 'course')
 
     def __str__(self):
-        return str(self.id) + " " + self.branch_name
+        return self.branch_name + " " + self.course.name
 
 
 # We need to fill manually

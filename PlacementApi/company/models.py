@@ -3,6 +3,7 @@ from course.models import Specialization
 from validators import Validate_file_size
 from django.core.validators import RegexValidator, FileExtensionValidator, MaxValueValidator
 from django.dispatch import receiver
+
 import os
 
 # Create your models here.
