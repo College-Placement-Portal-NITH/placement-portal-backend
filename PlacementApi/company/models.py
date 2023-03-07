@@ -9,10 +9,11 @@ import os
 class Company(models.Model):
     def company_directory_path(instance, filename):
         print(instance.logo)
-        return 'company_logos/{0}.jpg'.format(instance.name)
+        name, extension = os.path.splitext(instance.logo.path)
+        return 'company_logos/{0}{1}'.format(instance.name,extension)
 
     name = models.CharField(max_length=100, unique=True)
-    logo = models.ImageField(upload_to= company_directory_path, null = True, max_length=255, validators=[FileExtensionValidator(['jpg', 'jpeg', 'png']),Validate_file_size(10,"MB")])
+    logo = models.FileField(upload_to= company_directory_path, null = True, max_length=255, validators=[FileExtensionValidator(['jpg', 'jpeg', 'png','svg']),Validate_file_size(10,"MB")])
     # type (IT or Core)
     def __str__(self) -> str:
         return self.name

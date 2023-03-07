@@ -2,8 +2,8 @@ from django.shortcuts import redirect
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from .serializers import UserSerializer, RegisterSerializer
-from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework import status
 # from rest_framework_simplejwt.views import jwt_views
 # Register API
 class RegisterAPI(generics.GenericAPIView):
@@ -11,12 +11,19 @@ class RegisterAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        # serializer.is_valid(raise_exception=True)
+        if serializer.is_valid():
+            user = serializer.save()
+            # print("Valid Data")
+            return Response({
+                "message": "User Created Successfully.  Now perform Login to get your token",
+            }, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
         return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "message": "User Created Successfully.  Now perform Login to get your token",
-        })
+            "errors":serializer.errors,
+            "message": "Error Creating User",
+        },status=status.HTTP_409_CONFLICT)
 
 
 

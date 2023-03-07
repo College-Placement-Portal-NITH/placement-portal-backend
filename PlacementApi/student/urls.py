@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 urlpatterns = [
     path('',StudentList.as_view(),name = "list-student"),
+    path('countries/',CountryCreateAPIView.as_view(), name="add-countries"),
     path('getroutes',RouteList.as_view(),name = "get-routes"),
     path('ppo/',PPOList.as_view(),name = "ppo-list"),
     path('<str:pk>',StudentDetail.as_view(),name="detail-student"),
@@ -15,7 +16,5 @@ urlpatterns = [
     path('orderwise/',CommonQueries.as_view(),name ="stats-by-order"),
     path('companystats/',CommonQueries.as_view(),name ="company-related-stats")
     # path('cluster/',clusterchoosen.as_view(),name=  "detail-intern-student"),
-
-
 ]
 

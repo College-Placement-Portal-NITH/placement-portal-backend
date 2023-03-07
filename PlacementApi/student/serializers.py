@@ -13,24 +13,22 @@ class PPOSerializer(serializers.ModelSerializer):
         model = PPO
         fields = '__all__'
 
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField()
-
-
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
 
 class BranchSerializer(serializers.ModelSerializer):
+    course = serializers.SlugRelatedField(queryset = Course.objects.all(),slug_field='name')
     class Meta:
         model = Specialization
-        fields = '__all__'
+        exclude = ['id']
 
 class CitySerializer(serializers.ModelSerializer):
+    state = serializers.SlugRelatedField(queryset = State.objects.all(),slug_field='name')
     class Meta:
         model = City
-        fields = '__all__'
+        exclude = ['id']
 
 
 
@@ -40,12 +38,17 @@ class ClusterChosenSerializer(serializers.ModelSerializer):
         exclude = ['student','id']
 
 class StudentSerializer(serializers.ModelSerializer):
-    roll = UserSerializer()
+    # roll = UserSerializer()
+    roll = serializers.SlugRelatedField(queryset = User.objects.all(),slug_field='username')
     # roll  = serializers.CharField(source = 'roll.username')
-    course = CourseSerializer()
-    branch = BranchSerializer()
-    city = CitySerializer()
-    isBanned = serializers.SerializerMethodField()
+    # course = CourseSerializer()
+    course = serializers.SlugRelatedField(queryset = Course.objects.all(),slug_field='name')
+    branch = BranchSerializer(read_only=True)
+    branchWrite = serializers.CharField(write_only=True)
+    city = CitySerializer(read_only=True)
+    cityWrite = serializers.CharField(write_only=True)
+    state = serializers.SlugRelatedField(queryset = State.objects.all(),slug_field='name', write_only=True)
+    isBanned = serializers.SerializerMethodField(read_only=True)
     # student_placement = StudentPlacementSerializer(read_only = True,required = False)
     # student_intern = StudentInternSerializer(read_only = True,required = False)
 
@@ -57,25 +60,15 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        course_data = validated_data["course"]
+        branch_data = validated_data.pop('branchWrite')
+        branch = Specialization.objects.get(Q(branch_name = branch_data) & Q(course = course_data))
 
-        user_data = validated_data["roll"].get("username")
-        validated_data.pop('roll')
+        state_data = validated_data.pop('state')
+        city_data = validated_data.pop('cityWrite')
+        city = City.objects.get(Q(state__name = state_data) & Q(name = city_data))
 
-        course_data = validated_data["course"].get('name')
-        validated_data.pop('course')
-        branch_data = validated_data["branch"].get('branch_name')
-        validated_data.pop('branch')
-        city_data = validated_data["city"].get("name")
-        validated_data.pop('city')
-
-        user = User.objects.get(username = user_data)
-        course = Course.objects.get(name = course_data)
-        print(course)
-        branch = Specialization.objects.get(Q(branch_name = branch_data) & Q(course = course))
-        print(branch)
-        city = City.objects.get(name = city_data)
-
-        student = Student(roll = user,course = course,branch = branch,city = city,**validated_data)
+        student = Student(branch=branch, city=city,**validated_data)
         student.save()
         return student
 

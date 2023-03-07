@@ -33,6 +33,11 @@ class PPOList(generics.ListCreateAPIView):
     filterset_class = PPOFilter
     pagination_class = CustomPagination
 
+class CountryCreateAPIView(APIView):
+    def post(self,request):
+        new_country = Country(data= request.data)
+        new_country.save()
+        return Response(new_country,status=status.HTTP_201_CREATED)
 
 class StudentList(APIView):
     pagination_class = CustomPagination
@@ -48,13 +53,14 @@ class StudentList(APIView):
         return paginator.get_paginated_response(serialized_data.data)
 
     def post(self,request):
-    
-        new_student = StudentSerializer(data = request.data)
-        
+        new_student = StudentSerializer(data= request.data)
         if new_student.is_valid():
-            new_student.save()    
+            # print("Valid Data")
+            new_student.save()
             return Response(new_student.data,status=status.HTTP_201_CREATED)
-        return Response(new_student.errors,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print(new_student.errors)
+            return Response(new_student.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class StudentDetail(APIView):
     
@@ -95,7 +101,7 @@ class StudentPlacementList(APIView):
     def post(self,request):
         new_student_placement = StudentPlacementSerializer(data = request.data)
         if new_student_placement.is_valid():
-            new_student_placement.save()   
+            new_student_placement.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(new_student_placement.errors,status=status.HTTP_400_BAD_REQUEST)
 

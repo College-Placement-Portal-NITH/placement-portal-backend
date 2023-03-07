@@ -6,7 +6,7 @@ from .serializers import CompanySerializer, HRSerializer, JNFSerializer, JNFPlac
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
-from rest_framework import generics
+from rest_framework import generics, status
 
 class CompanyDetailAPIView(generics.RetrieveUpdateAPIView):
     queryset = Company.objects.all()
@@ -16,10 +16,28 @@ class CompanyDetailAPIView(generics.RetrieveUpdateAPIView):
 class CompanyListAPIView(generics.ListCreateAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    def post(self,request):
+        new_company = self.serializer_class(data= request.data)
+        if new_company.is_valid():
+            # print("Valid Data")
+            new_company.save()
+            return Response(new_company.data,status=status.HTTP_201_CREATED)
+        else:
+            print(new_company.errors)
+        return Response(new_company.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class HRCreateAPIView(generics.CreateAPIView):
     serializer_class = HRSerializer
     queryset = HR_details.objects.prefetch_related().all()
+    def post(self,request):
+        new_hr = self.serializer_class(data= request.data)
+        if new_hr.is_valid():
+            # print("Valid Data")
+            new_hr.save()
+            return Response(new_hr.data,status=status.HTTP_201_CREATED)
+        else:
+            print(new_hr.errors)
+        return Response(new_hr.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class HRRetrieveAPIView(generics.ListAPIView):
     serializer_class = HRSerializer

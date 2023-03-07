@@ -97,8 +97,8 @@ class Student(models.Model):
     disability_percentage = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     gap_12_ug = models.IntegerField(default=0)
     gap_ug_pg = models.IntegerField(default=0)
-    banned_date = models.DateTimeField(default=timezone.datetime(2023,1,1,12,0,0))
-    over_date = models.DateTimeField(default=timezone.datetime(2023,1,1,12,0,0))
+    banned_date = models.DateTimeField(default=timezone.now)
+    over_date = models.DateTimeField(default=timezone.now)
 
     objects = models.Manager()
     banned = StudentManager()

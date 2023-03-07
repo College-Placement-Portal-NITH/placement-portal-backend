@@ -14,7 +14,7 @@ class Specialization(models.Model):
         unique_together = ('branch_name', 'course')
 
     def __str__(self):
-        return self.branch_name
+        return str(self.id) + " " + self.branch_name
 
 
 # We need to fill manually
@@ -24,3 +24,6 @@ class CourseYearAllowed(models.Model):
     type_allowed = models.CharField(max_length=20, choices=[('intern', "Internship"), ('placement', "Placement"), ('NA', "Not Allowed")])
     class Meta:
         unique_together = ('course','year')
+
+    def __str__(self) -> str:
+        return self.course.name + " " + str(self.year) + " " + self.type_allowed
