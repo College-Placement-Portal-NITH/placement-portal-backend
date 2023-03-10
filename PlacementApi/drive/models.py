@@ -35,6 +35,7 @@ class Drive(models.Model):
     # drive type based on company type for e.g. IT, Mech Core, EE Core, etc..
     session = models.CharField(max_length=7,validators=[RegexValidator(regex=r'\d{4}[-]\d{2}$')])
     job_type = models.CharField(max_length=15, choices=jtype)
+    closed = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('company','job_type','session')

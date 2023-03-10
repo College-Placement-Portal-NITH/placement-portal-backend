@@ -11,7 +11,8 @@ from django.core.files import File
 
 class JobRolesSerializer(serializers.ModelSerializer):
     role = serializers.SlugRelatedField(queryset=Role.objects.all(), slug_field="name")
-    eligible_batches = SpecializationSerializer(many= True)
+    # eligible_batches = SpecializationSerializer(many= True)
+    # eligible_batches = SpecializationSerializer(many= True)
     drive = serializers.PrimaryKeyRelatedField(queryset = Drive.objects.all(),write_only = True)
     class Meta:
         model = JobRoles
@@ -23,8 +24,9 @@ class JobRolesSerializer(serializers.ModelSerializer):
         job_role = JobRoles(**validated_data)
         job_role.save()
         for batches in eligible_batches:
-            specialization = Specialization.objects.get(branch_name = batches["branch"],course = batches["course"])
-            job_role.eligible_batches.add(specialization)
+            # specialization = Specialization.objects.get(branch_name = batches["branch"],course = batches["course"])
+            # job_role.eligible_batches.add(specialization)
+            job_role.eligible_batches.add(batches)
         return job_role
     
     def update(self, instance, validated_data):
@@ -42,7 +44,6 @@ class JobRolesSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    
 
 class DriveSerializer(serializers.ModelSerializer):
     company = serializers.SlugRelatedField(queryset =Company.objects.all(),slug_field="name")

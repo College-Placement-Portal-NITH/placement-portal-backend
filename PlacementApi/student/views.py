@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from rest_framework.response import Response 
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, status
 from .models import *
 from .serializers import *
-from rest_framework import status
 # from course.models import CourseYearAllowed
 from .filters import StudentPlacementFilter,StudentInternFilter,StudentNSFilter,StudentFilter,PPOFilter
 from .pagination import CustomPagination
@@ -35,11 +34,33 @@ class PPOList(generics.ListCreateAPIView):
     filterset_class = PPOFilter
     pagination_class = CustomPagination
 
-class CountryCreateAPIView(APIView):
+# class CountryCreateAPIView(APIView):
+#     def post(self,request):
+#         print(request.data["name"])
+#         new_state = Country()
+#         new_country.name = request.data["name"]
+#         new_country.save()
+#         return Response(status=status.HTTP_201_CREATED)
+
+# class StateCreateAPIView(APIView):
+#     def post(self,request):
+#         new_state = State(name=request.data["name"], country=Country.objects.get(pk = 101))
+#         new_state.save()
+#         return Response(status=status.HTTP_201_CREATED)
+
+# class CityCreateAPIView(APIView):
+#     def post(self,request):
+#         state,create = State.objects.get_or_create(name = request.data["state"], country=Country.objects.get(pk = 101))
+#         new_city = City(name=request.data["name"], state = state)
+#         new_city.save()
+#         return Response(status=status.HTTP_201_CREATED)
+
+class CategoryCreateAPIView(APIView):
     def post(self,request):
-        new_country = Country(data= request.data)
-        new_country.save()
-        return Response(new_country,status=status.HTTP_201_CREATED)
+        new_category = Category(name=request.data["name"])
+        new_category.save()
+        return Response(status=status.HTTP_201_CREATED)
+
 
 class StudentList(APIView):
     pagination_class = CustomPagination
@@ -105,6 +126,7 @@ class StudentPlacementList(APIView):
         new_student_placement = StudentPlacementSerializer(data = request.data)
         # print(request.data)
         if new_student_placement.is_valid():
+            # print("Valid Data")
             new_student_placement.save()
             return Response(status=status.HTTP_201_CREATED)
         # print(new_student_placement.errors)
@@ -132,6 +154,7 @@ class StudentPlacementDetail(APIView):
         student_placement.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class StudentInternList(APIView):
     filter_class = StudentInternFilter
     pagination_class = CustomPagination
@@ -148,10 +171,10 @@ class StudentInternList(APIView):
     def post(self,request):
         new_student_intern = StudentInternSerializer(data = request.data)
         if new_student_intern.is_valid():
+            # print("Valid Data")
             new_student_intern.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(new_student_intern.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class StudentInternDetail(APIView):
@@ -188,6 +211,7 @@ class StudentNotSittingList(APIView):
     def post(self,request):
         new_student_ns = StudentNotSittingSerializer(data = request.data)
         if new_student_ns.is_valid():
+            # print("Valid Data")
             new_student_ns.save() #owner = request.user    
             return Response(status=status.HTTP_201_CREATED)
         return Response(new_student_ns.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -213,17 +237,33 @@ class StudentNotSittingDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-class StudentPlaced(generics.ListCreateAPIView):
+class StudentInterned(generics.ListCreateAPIView):
     queryset = Interned.objects.all()
     serializer_class = InternedSerializer
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        # print(request.data)
         serializer = InternedSerializer(data = request.data)
         if serializer.is_valid():
+            # print("Valid Data")
             serializer.save()
+            return Response(status= status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
-        return Response({'sumit' : "yes"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StudentPlaced(generics.ListCreateAPIView):
+    queryset = Placed.objects.all()
+    serializer_class = PlacedSerializer
+    def post(self, request, *args, **kwargs):
+        # print(request.data)
+        serializer = PlacedSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status= status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # class clusterchoosen(APIView):
@@ -310,25 +350,24 @@ class CommonQueries(APIView):
         session = request.query_params["session"]
         jtype = request.query_params["type"]
         order = request.query_params["order"]
-      
         name = request.query_params["company"]
-        # name = 'inc'
-        passingYear = "20" + session[5:]
+        # passingYear = "20" + session[5:]
+        # passingYear = int(passingYear)
         if order == "ctc":
             if jtype == "intern":
-                queryset = Interned.objects.filter(student__student__passing_year = passingYear,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(max_stipend = Max('job_role__ctc')).order_by('-job_role__ctc')
+                queryset = Interned.objects.filter(drive__session = session,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(max_stipend = Max('job_role__ctc')).order_by('-job_role__ctc')
 
             else:
-                queryset = Placed.objects.filter(student__student__passing_year = passingYear,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(max_ctc = Max('job_role__ctc')).order_by('-job_role__ctc')
+                queryset = Placed.objects.filter(drive__session = session,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(max_ctc = Max('job_role__ctc')).order_by('-job_role__ctc')
             paginator = self.pagination_class()
             queryset = paginator.paginate_queryset(queryset,request)
             return paginator.get_paginated_response(queryset) 
 
         else:
             if jtype == "intern":
-                queryset = Interned.objects.filter(student__student__passing_year = passingYear,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(offers = Count('student')).order_by('-offers')
+                queryset = Interned.objects.filter(drive__session = session,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(offers = Count('student')).order_by('-offers')
             else:
-                queryset = Placed.objects.filter(student__student__passing_year = passingYear,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(offers = Count('student')).order_by('-offers')
+                queryset = Placed.objects.filter(drive__session = session,drive__company__name__icontains = name).values(name = F('drive__company__name')).annotate(offers = Count('student')).order_by('-offers')
             paginator = self.pagination_class()
             queryset = paginator.paginate_queryset(queryset,request)
             return paginator.get_paginated_response(queryset) 
@@ -350,14 +389,21 @@ class RecentNotifications(APIView):
         for exp in recentExperience:
             serializerexperience.append({'Id' : exp.id,'Name':exp.student.first_name,'Created_Date':exp.created_at})
         result["Recent_Experience"] = serializerexperience
-        
 
         return Response(result)
+
 
 class CompanyRelatedQueries(APIView):
     def get(self, request, *args, **kwargs):
         session = request.query_params["session"]
         jtype = request.query_params["jtype"]
         company = request.query_params["company"]
+
+        if jtype == "internship":
+            queryset = Interned.objects.filter(job_role__drive__session = session,job_role__drive__company__name__iexact = company).values(name = F('job_role__drive__company__name'))
+            queryset = Offcampus.objects.filter(type = jtype, session = session,company__name__iexact = company).values(name = F('company__name'))
+            pass
+        elif jtype == "placement":
+            pass
 
         return super().get(request, *args, **kwargs)

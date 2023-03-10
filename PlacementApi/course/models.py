@@ -23,7 +23,7 @@ class CourseYearAllowed(models.Model):
     year = models.IntegerField()  # denotes different years in B.Tech, M.Tech., etc..
     type_allowed = models.CharField(max_length=20, choices=[('intern', "Internship"), ('placement', "Placement"), ('NA', "Not Allowed")])
     class Meta:
-        unique_together = ('course','year')
+        unique_together = ('course','year','type_allowed')
 
     def __str__(self) -> str:
         return self.course.name + " " + str(self.year) + " " + self.type_allowed

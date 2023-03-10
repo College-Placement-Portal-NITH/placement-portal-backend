@@ -14,7 +14,7 @@ class StudentAdmin(admin.ModelAdmin):
     
 # admin.site.register(StudentIntern)
 @admin.register(StudentIntern)
-class StudentPlacementAdmin(admin.ModelAdmin):
+class StudentInternAdmin(admin.ModelAdmin):
     list_display = ['id']
 # admin.site.register(StudentPlacement)
 @admin.register(StudentPlacement)

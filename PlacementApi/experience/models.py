@@ -9,8 +9,8 @@ diff_choices = [
     ('H' , 'Hard')
 ]
 jtype = [
-    ('Internship','Internship'),
-    ('Placement','Placement'),
+    ('internship','Internship'),
+    ('placement','Placement'),
 ]
 
 # c_type_choices = [
