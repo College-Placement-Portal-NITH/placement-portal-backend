@@ -44,11 +44,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['roll'] = user.username
+        # token["allowed_for"] = "intern"
+        token["img_url"] = "https://picsum.photos/100"
+
+        
         try:
             student = user.student
             token["first_name"] = student.first_name
             token["last_name"] = student.last_name
             token["img_url"] = "http://sakhanithnith.pagekite.me/" + student.image_url.url
+            token["course"] = student.course.name
             allowed_for = CourseYearAllowed.objects.get(year = student.current_year,course = student.course).type_allowed
             token["allowed_for"] = allowed_for
         except:

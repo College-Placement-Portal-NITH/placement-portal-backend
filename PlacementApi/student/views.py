@@ -16,6 +16,10 @@ from django.db.models import F
 from experience.models import Experience
 from rest_framework import filters
 import pandas as pd
+from rest_framework import permissions
+
+
+
 class CountryListCreateAPIView(APIView):
     def post(self,request):
         print(request.data["name"])
@@ -297,6 +301,7 @@ class StudentPlaced(generics.ListCreateAPIView):
 
 
 class BasicStats(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get(self,request):
 
         if request.query_params.get('session') == None or request.query_params["session"] == "":
@@ -320,8 +325,8 @@ class BasicStats(APIView):
         
         statsInfo = []
         result = {}
-        
-        
+        course_name = request.user.student.course.name
+        print(course_name)
 
         if jtype == "intern":
             topCompaniesIntern = Interned.objects.filter(job_role__drive__session = session).values(name = F('job_role__drive__company__name'),logo =F('job_role__drive__company__logo')).annotate(max_stipend = Max('job_role__ctc')).order_by('-job_role__ctc')[:10]#student__student__passing_year 
@@ -329,7 +334,7 @@ class BasicStats(APIView):
             topCompanies = topCompaniesIntern.union(topCompaniesOffCampus).order_by('-max_stipend')[:10]
             companiesVisited = Interned.objects.filter(job_role__drive__session = session).values(name = F('job_role__drive__company__name')).distinct().count() 
             print(companiesVisited)
-            course_name = "B.Tech"
+            # course_name = "B.Tech"
             oncampus_data = Interned.objects.filter(job_role__drive__session = session,student__student__course__name = course_name).values(roll = F('student__student'),branch = F('student__student__branch__branch_name'),stipend = F('job_role__ctc'))
             offcampus_data = Offcampus.objects.filter(session = session,type = 'intern',student__course__name = course_name).values(roll=F('student'),branch = F('student__branch__branch_name'),stipend=F('ctc'))
             complete_data = oncampus_data.union(offcampus_data)
@@ -370,6 +375,7 @@ class BasicStats(APIView):
                 branch_wise = {"course":course_name,"branch":branch,"offers":total_offers,"avg_stipend":avg_stipend,"max_stipend":max_stipend,"min_stipend":min_stipend}
                 course_wise.append(branch_wise)
             print(temp)
+            
 
             totalAppeared = StudentIntern.objects.filter(student__passing_year = passingYear+1).count() # we have to think for mtech and msc 
             course = Course.objects.count()
@@ -391,7 +397,6 @@ class BasicStats(APIView):
             topCompaniesPPO = PPO.objects.filter(session = session).values(name = F('company__name'),logo = F('company__logo')).annotate(max_ctc = Max('ctc'))
             topCompanies = topCompaniesPlacement.union(topCompaniesOffCampus,topCompaniesPPO).order_by('-max_ctc')[:10]
             companiesVisited =  Placed.objects.filter(job_role__drive__session = session).values(name = F('job_role__drive__company__name')).distinct().count()
-            course_name = "B.Tech"
             oncampus_data = Placed.objects.filter(job_role__drive__session = session,student__student__course__name = course_name).values(roll =F('student__student'),branch = F('student__student__branch__branch_name'),ctc_ = F('job_role__ctc'))
             offcampus_data = Offcampus.objects.filter(session = session,type = 'placement',student__course__name = course_name).values(roll=F('student'),branch = F('student__branch__branch_name'),ctc_=F('ctc'))
             ppo_data = PPO.objects.filter(session = session,student__course__name = course_name).values(roll=F('student'),branch = F('student__branch__branch_name'),ctc_=F('ctc'))

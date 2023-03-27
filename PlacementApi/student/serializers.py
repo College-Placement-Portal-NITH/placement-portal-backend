@@ -69,6 +69,10 @@ class StudentSerializer(serializers.ModelSerializer):
     college_email = serializers.SerializerMethodField()
     eligibility = serializers.SerializerMethodField()
     class_12_domicile = serializers.SlugRelatedField(queryset = State.objects.all(),slug_field='name')
+    # img_url = serializers.SerializerMethodField()
+
+    # def get_img_url(self,item):
+    #     return "http://sakhanithnith.pagekite.me" + item.image_url.url
     
     def get_eligibility(self,item):
         result = {}
