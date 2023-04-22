@@ -14,3 +14,4 @@ class TPRListView(generics.ListCreateAPIView):
 class TPRView(generics.RetrieveDestroyAPIView):
     queryset = TPR.objects.all()
     serializer_class=TPRSerializers
+
