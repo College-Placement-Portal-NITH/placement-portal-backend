@@ -7,7 +7,7 @@ class MailSender():
     def sendMail(self, subject, template, data, to_emails):
         assert isinstance(to_emails,list)
         html_content = render_to_string(template, data)
-        email = EmailMultiAlternatives(subject, '', settings.EMAIL_HOST_USER, to_emails)
+        email = EmailMultiAlternatives(subject, 'kasfjdlkjlkavjcnzxkjnasldkfjnck', settings.EMAIL_HOST_USER, to_emails)
         email.attach_alternative(html_content, "text/html")
         res = email.send()
         return res

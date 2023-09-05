@@ -49,7 +49,7 @@ class RegisterAPI(generics.GenericAPIView):
             pass
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()        
+            user = serializer.save()
             otp = random.randint(100000,999999)
             userotp = UserOtp.objects.create(user=user,otp = otp)
             userotp.save()
@@ -71,14 +71,12 @@ class OTPVerification(views.APIView):
         otp = int(request.data['otp'])
         # password = request.data['password']
         try:
-            user = User.objects.get(username=username, isActive = False)
-            print(user)
+            user = User.objects.get(username=username, is_active = False)
             userotp = UserOtp.objects.get(user=user)
-            print(userotp)
             if(datetime.datetime.now(pytz.utc) > userotp.time+datetime.timedelta(minutes=5)):
                 return Response({"msg":"OTP Expired. Regenerate"}, status=status.HTTP_400_BAD_REQUEST)
             if otp == userotp.otp:
-                user.isActive = True
+                user.is_active = True
                 user.save()
                 userotp.delete()
                 MailSender().registration_success(data={"username":user.username},email=user.email)
@@ -116,7 +114,7 @@ class CheckPermissions(generics.GenericAPIView):
             return [TPRPermissions()]
         else:
             return []
-   
+
     def get(self,request):
         # self.permission_classes = [TPRPermissions]
         return Response("HII I AM TPR AND YOU HAVE TO LISTEN TO ME !!!",status=status.HTTP_200_OK)

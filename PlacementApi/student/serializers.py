@@ -181,26 +181,40 @@ class StudentTPOSerializer(StudentSerializer):
         except:
             return "Clusters were not chosen by you!! Please select your clusters and then come back"
 
-        placed = Placed.objects.filter(student = student_placement)
-        clusters_list = []
-        for placement in placed:
-            obj = {}
-            cluster = Cluster.objects.get(starting__lt = placement.job_role.ctc,ending__gte = placement.job_role.ctc)
+        placedDetailModels = [Placed, Offcampus, PPO]
 
-            obj['cluster'] = cluster.cluster_id
-            if cluster.cluster_id < chosenclusters.cluster_1.cluster_id:
-                obj['type'] = "below"
-            elif cluster.cluster_id == chosenclusters.cluster_1.cluster_id:
-                obj['type'] = "base"
-            elif cluster.cluster_id > chosenclusters.cluster_1.cluster_id and cluster.cluster_id < chosenclusters.cluster_2.cluster_id:
-                obj['type'] = "above_base"
-            elif cluster.cluster_id == chosenclusters.cluster_2.cluster_id:
-                obj['type'] = "middle"
-            elif cluster.cluster_id > chosenclusters.cluster_2.cluster_id and cluster.cluster_id < chosenclusters.cluster_3.cluster_id:
-                obj['type'] = "above_middle"
-            elif cluster.cluster_id == chosenclusters.cluster_3.cluster_id:
-                obj['type'] = "dream"
-            clusters_list.append(obj)
+        clusters_list = []
+        for placed_model in placedDetailModels:
+            if placed_model==Placed:
+                placed = placed_model.objects.filter(student = student_placement)
+            elif placed_model==Offcampus or placed_model==PPO:
+                placed = placed_model.objects.filter(student = item)
+
+            for placement in placed:
+                obj = {}
+                cluster = None
+                try:
+                    if placed_model==Placed:
+                        cluster = Cluster.objects.get(starting__lt = placement.job_role.ctc,ending__gte = placement.job_role.ctc)
+                    elif placed_model==Offcampus or placed_model==PPO:
+                        cluster = Cluster.objects.get(starting__lt = placement.ctc,ending__gte = placement.ctc)
+                except:
+                    raise APIException("Unable to find the cluster for the ctc of the placed student " + item.roll.username)
+
+                obj['cluster'] = cluster.cluster_id
+                if cluster.cluster_id < chosenclusters.cluster_1.cluster_id:
+                    obj['type'] = "below"
+                elif cluster.cluster_id == chosenclusters.cluster_1.cluster_id:
+                    obj['type'] = "base"
+                elif cluster.cluster_id > chosenclusters.cluster_1.cluster_id and cluster.cluster_id < chosenclusters.cluster_2.cluster_id:
+                    obj['type'] = "above_base"
+                elif cluster.cluster_id == chosenclusters.cluster_2.cluster_id:
+                    obj['type'] = "middle"
+                elif cluster.cluster_id > chosenclusters.cluster_2.cluster_id and cluster.cluster_id < chosenclusters.cluster_3.cluster_id:
+                    obj['type'] = "above_middle"
+                elif cluster.cluster_id == chosenclusters.cluster_3.cluster_id:
+                    obj['type'] = "dream"
+                clusters_list.append(obj)
         # print(clusters_list)
         return clusters_list
 
