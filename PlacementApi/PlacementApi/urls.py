@@ -28,4 +28,5 @@ urlpatterns = [
     path('drives/',include('drive.urls')),
     path('courses/',include('course.urls')),
     path('announcements/',include('tpo.urls')),
+    path('add-drive/',include('drive.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

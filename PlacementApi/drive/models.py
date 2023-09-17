@@ -27,7 +27,7 @@ class Drive(models.Model):
     jobProfile = models.CharField(max_length=100, default="SDE1")
     courses = models.ManyToManyField(Course)
     # branches = models.ForeignKey(Specialization,on_delete=models.CASCADE)
-    branched = models.ManyToManyField(Specialization)
+    branches = models.ManyToManyField(Specialization)
     cgpi = models.IntegerField(default=0)
     allowStudentsWithBacklogs = models.BooleanField(default=True)
     modeOfHiring = models.CharField(default="virtual", choices = [('virtual','Virtual'),('onsite','On-Site')], max_length=20)
@@ -47,6 +47,7 @@ class Drive(models.Model):
     # drive type based on company type for e.g. IT, Mech Core, EE Core, etc..
     # tpr = models.ForeignKey(TPR,on_delete=models.CASCADE,null=True)
     closed_date = models.DateTimeField(null=True)
+    drive_status = models.CharField(default="Upcoming", choices = [('Upcoming','Upcoming'),('Ongoing','Ongoing'),('Completed','Completed')], max_length=20)
 
     class Meta:
         unique_together = ('company','job_type','session')
