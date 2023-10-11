@@ -65,6 +65,9 @@ class JNF(models.Model):
     class Meta:
         unique_together = ("company", "session")
 
+class JD(models.Model):
+    jobDescPdf = models.FileField(blank=True, validators=[FileExtensionValidator(['docx','doc','pdf']), Validate_file_size(5,"MB")])
+
 
 class JNF_placement_base(models.Model):
     def job_desc_directory_path(instance, filename):

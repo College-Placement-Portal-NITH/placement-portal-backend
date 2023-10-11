@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Company, HR_details, JNF, JNF_placement, JNF_intern, JNF_intern_fte
+from .models import Company, HR_details, JNF, JNF_placement, JNF_intern, JNF_intern_fte, JD
 from course.models import Specialization
 from course.serializers import SpecialisationSerializer
 from django.core.exceptions import FieldDoesNotExist
@@ -239,3 +239,12 @@ class JNFSerializer(serializers.ModelSerializer):
         return jnf
     # def update(self, instance, validated_data):
     #     instance.jnf = validated_data.get('jnf',instance.jnf)
+
+class JDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JD
+        fields = '__all__'
+    def create(self,validated_data):
+        jd = JD(**validated_data)
+        jd.save()
+        return jd

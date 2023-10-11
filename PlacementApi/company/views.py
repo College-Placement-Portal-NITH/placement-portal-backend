@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .models import Company, HR_details, JNF, JNF_placement, JNF_intern, JNF_intern_fte
-from .serializers import CompanySerializer, HRSerializer, JNFSerializer, JNFPlacementSerializer, JNFInternSerializer, JNFInternFTESerializer, JNF_TPO_Serializer
+import json
+from .models import Company, HR_details, JNF, JNF_placement, JNF_intern, JNF_intern_fte, JD
+from .serializers import CompanySerializer, HRSerializer, JNFSerializer, JNFPlacementSerializer, JNFInternSerializer, JNFInternFTESerializer, JNF_TPO_Serializer, JDSerializer
 from accounts.utils import GetSession
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.decorators import api_view
@@ -40,6 +41,21 @@ class HRListAPIView(generics.ListAPIView):
 class HRDestroyAPIView(generics.DestroyAPIView):
     serializer_class = HRSerializer
     queryset = HR_details.objects.all()
+
+class JDCreateAPIView(generics.CreateAPIView):
+    queryset = JD.objects.all()
+    serializer_class = JDSerializer
+    def post(self,request):
+        jd = JDSerializer(data=request.data)
+        if(jd.is_valid()):
+            jd.save()
+        else:
+            print('not valid')
+        print(request.data)
+        # jsonResponse = json.loads(request.body.decode('utf-8'))
+        # print(jsonResponse)
+        return Response(request.data)
+        
 
 class JNFCreateAPIView(generics.CreateAPIView):
     queryset = JNF.objects.all()

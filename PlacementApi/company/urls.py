@@ -18,4 +18,5 @@ urlpatterns = [
     path('jnfinterns/create/',views.JNFInternCreateAPIView.as_view()),
     path('jnfinterns/<str:company>',views.JNFInternRetrieveAPIView.as_view()),
     path('add-jnf/',views.JNFCreateAPIView.as_view()),
+    path('add-jd/',views.JDCreateAPIView.as_view()),
 ]
