@@ -27,7 +27,6 @@ class Announcement(models.Model):
     session = models.CharField(max_length=7,validators=[RegexValidator(regex=r'\d{4}[-]\d{2}$')])
     # time = models.DateTimeField(auto_now=True)
     tpo = models.ForeignKey(TPO, on_delete=models.CASCADE, blank=True, null=True)
-    tpr = models.ForeignKey(TPR, on_delete=models.CASCADE, blank=True,null=True)
     class Meta:
         abstract = True
 

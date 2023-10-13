@@ -10,16 +10,13 @@ class Company(models.Model):
         return 'company_logos/{0}.png'.format(instance.name)
 
     name = models.CharField(max_length=100, unique=True)
-    logo = models.ImageField(upload_to= company_directory_path, null = True, max_length=255, validators=[FileExtensionValidator(['jpg', 'jpeg', 'png','svg']),Validate_file_size(10,"MB")])
+   
     # type (IT or Core)
     def __str__(self) -> str:
         return self.name
 
     def delete(self, using=None, keep_parents=False):
         print("Delete function invoked")
-        storage = self.logo.storage
-        if storage.exists(self.logo.name):
-            storage.delete(self.logo.name)
         return super().delete(using, keep_parents)
 
 class HR_details(models.Model):

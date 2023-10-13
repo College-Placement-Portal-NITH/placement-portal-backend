@@ -77,7 +77,7 @@ class DriveList(generics.ListCreateAPIView):
             session = str(curr_date.year-1) + "-"+str(curr_date.year)[2:]
         else:
             session = str(curr_date.year) + "-"+str(curr_date.year+1)[2:]
-
+        
         if self.request.user.username == "tpo@nith.ac.in":
             queryset = Drive.objects.filter()
             return queryset
@@ -119,7 +119,7 @@ class DriveList(generics.ListCreateAPIView):
     #         return []
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        # print(request.data)
         if "other" in request.data:    
             for new_role in request.data["other"]:
                 Role.objects.get_or_create(name=new_role)
@@ -127,14 +127,14 @@ class DriveList(generics.ListCreateAPIView):
         driveserializer = DriveSerializer(data = request.data)
         if driveserializer.is_valid():
             drive = driveserializer.save()
-            job_roles = request.data["job_roles"]
-            for job_role in job_roles:
-                new_role = JobRolesSerializer(data={"drive":drive.pk,"role":job_role["role"],"ctc":job_role["ctc"], "cgpi":float(job_role["cgpi"]),"eligible_batches":job_role['eligibleBatches']})
-                if(new_role.is_valid()):
-                    new_role.save()
-                else:
-                    print(new_role.errors)
-                    print("Invalid Data for Job Role")
+            # job_roles = request.data["job_roles"]
+            # for job_role in job_roles:
+            #     new_role = JobRolesSerializer(data={"drive":drive.pk,"role":job_role["role"],"ctc":job_role["ctc"], "cgpi":float(job_role["cgpi"]),"eligible_batches":job_role['eligibleBatches']})
+            #     if(new_role.is_valid()):
+            #         new_role.save()
+            #     else:
+            #         print(new_role.errors)
+            #         print("Invalid Data for Job Role")
             return Response(driveserializer.data)
         else:
             print(driveserializer.errors)
@@ -143,26 +143,15 @@ class DriveList(generics.ListCreateAPIView):
 
 class DriveDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drive.objects.all()
-    permission_classes = [permissions.IsAuthenticated,custom_permissions.TPRPermissions] 
+    # permission_classes = [permissions.IsAuthenticated,custom_permissions.TPRPermissions] 
     serializer_class = DriveSerializer
-    def put(self, request,pk):
-        drive = Drive.objects.get(id = pk)
-        serializer = DriveSerializer(instance=drive,data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-        # jobRoles = request.data["job_roles"][0]
-        # print(request.data)
-        jobRoles = request.data["job_roles"]
-        # print(jobRoles)
-        jobRoles["drive"] = drive.id
-        job_roles = JobRoles.objects.get(id = jobRoles["id"])
-        serializerRole = JobRolesSerializer(instance=job_roles,data = jobRoles)
-        if serializerRole.is_valid():
-            print("valid_data")
-            serializerRole.save()
-            return Response(serializer.data)
-        else:
-            print(serializerRole.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request,pk):
+        student = Drive.objects.get(id = pk)
+        update_student = DriveSerializer(instance=student,data = request.data)
+        if update_student.is_valid():
+            update_student.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(update_student.errors,status=status.HTTP_400_BAD_REQUEST)
+        
 
     

@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
+from .views import StudentList
 urlpatterns = [
     path('',views.StudentList.as_view(),name = "list-student"),
+    path('excel/',views.StudentExcel.as_view(),name = "list-student-download"),
     path('countries/',views.CountryListCreateAPIView.as_view(), name="add-countries"),
     path('states/',views.StateListAPIView.as_view(), name="add-states"),
     path('cities/<str:state>',views.CityListAPIView.as_view(), name="add-cities"),

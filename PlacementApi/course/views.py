@@ -52,9 +52,10 @@ class SpecializationAPIView(views.APIView):
                 return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_201_CREATED)
 class SpecializationDetailAPIView(views.APIView):  
+   
     def get(self,request,id):
         branches = Specialization.objects.filter(course = id).values('id','branchName','branchFullname')
-        return Response({"branches":branches})
+        return Response(branches)
 
 
 class CourseYearAllowedAPIView(generics.ListCreateAPIView):

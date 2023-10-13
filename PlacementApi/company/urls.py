@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     # path('',views.CompanyAPIView.as_view()),
     # path('refresh',views.RefreshDatabase,name = "add-company-data"),
-    path('',views.CompanyListAPIView.as_view()),
+    # path('',views.CompanyListAPIView.as_view()),
+    path('',views.CreateCompanyAPIView.as_view()),
     path('<str:name>',views.CompanyDetailAPIView.as_view()),
     path('<str:name>/hr/',views.HRListAPIView.as_view()),
     path('<str:name>/hr/<int:pk>/',views.HRDestroyAPIView.as_view()),

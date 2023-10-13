@@ -19,13 +19,13 @@ class AnnouncementAPIView(generics.ListCreateAPIView):
     serializer_class_General = GeneralAnnouncementSerializer
     serializer_class_Company = CompanyAnnouncementSerializer
     queryset = CompanyAnnouncement.objects.all()
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [permissions.IsAuthenticated()]
-        elif self.request.method == 'POST':
-            return [custom_permissions.TPOPermissions()] # custom_permissions.TPRPermissions()]
-        else:
-            return []
+    # def get_permissions(self):
+    #     if self.request.method == 'GET':
+    #         return [permissions.IsAuthenticated()]
+    #     elif self.request.method == 'POST':
+    #         return [custom_permissions.TPOPermissions()] # custom_permissions.TPRPermissions()]
+    #     else:
+    #         return []
    
 
     def get_queryset_General(self):
@@ -146,7 +146,7 @@ class CollegePlacementStats(APIView):
         else:
             jtype = request.query_params["type"]
 
-        passingYear = "20" + session[5:]
+        passingYear = "2024" 
         passingYear = int(passingYear)
         print(passingYear)
 

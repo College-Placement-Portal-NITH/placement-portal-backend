@@ -4,15 +4,18 @@ from rest_framework import generics
 from drive.models import Drive
 from .models import *
 from .serializers import *
+from django.http import JsonResponse
 from rest_framework import status
 from .filters import StudentPlacementFilter,StudentInternFilter,StudentNSFilter,StudentFilter,PPOFilter, StudentTPOFilter
 from .pagination import CustomPagination
 from django.db.models import Max,Count,Avg,Min
 from django.db.models import F
 from experience.models import Experience
+from django.core import serializers
 from rest_framework import permissions
 from accounts import permissions as custom_permissions
 import pandas as pd
+from django.http import HttpResponse
 
 class CountryListCreateAPIView(APIView):
     def post(self,request):
@@ -87,7 +90,6 @@ class PPOList(generics.ListCreateAPIView):
         else:
             return []
 
-
 class StudentList(APIView):
     pagination_class = CustomPagination
     filter_class = StudentFilter
@@ -119,6 +121,41 @@ class StudentList(APIView):
             print(new_student.errors)
         return Response(new_student.errors,status=status.HTTP_400_BAD_REQUEST)
 
+    
+class StudentExcel(APIView):
+    pagination_class = CustomPagination
+    filter_class = StudentFilter
+    # def get_permissions(self):
+    #     if self.request.method == 'GET':
+    #         return [permissions.IsAuthenticated()]
+    #     elif self.request.method == 'POST':
+    #         return [permissions.IsAuthenticated()]
+    #     else:
+    #         return []
+
+    def get(self, request):
+        queryset = Student.objects.select_related('roll').all()
+        queryset = self.filter_class(request.query_params,queryset).qs
+        queryset = queryset.order_by('cgpi')
+        paginator = self.pagination_class()
+        queryset = paginator.paginate_queryset(queryset,request)
+        serialized_data = StudentSerializer(queryset,many = True)
+        df = pd.DataFrame(serialized_data.data)
+        # Create an in-memory Excel writer using pandas
+        excel_writer = pd.ExcelWriter("data.xlsx", engine="openpyxl")
+        # Write the DataFrame to the Excel file
+        df.to_excel(excel_writer, index=False)
+        # Save the Excel file
+        excel_writer.close()
+        # Create a response with the Excel file
+        response = HttpResponse(content_type="application/ms-excel")
+        response["Content-Disposition"] = 'attachment; filename="data.xlsx"'
+        # Write the Excel file to the response
+        with open("data.xlsx", "rb") as excel_file:
+             response.write(excel_file.read())
+
+        return response
+    
 
 class StudentDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]  

@@ -5,9 +5,16 @@ from course.serializers import SpecialisationSerializer
 from django.core.exceptions import FieldDoesNotExist
 
 class CompanySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Company
         fields = '__all__'
+
+    def create(self, validated_data):
+        jnf = Company(**validated_data)
+        jnf.save()
+        return jnf
+
 
     def update(self, instance, validated_data):
         print(instance.logo)

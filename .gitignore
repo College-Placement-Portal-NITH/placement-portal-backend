@@ -1,5 +1,5 @@
 .idea
-myenv
+venv
 temp
 __pycache__/
 migrations/
