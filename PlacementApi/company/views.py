@@ -46,12 +46,15 @@ class JDCreateAPIView(generics.CreateAPIView):
     queryset = JD.objects.all()
     serializer_class = JDSerializer
     def post(self,request):
-        jd = JDSerializer(data=request.data)
-        if(jd.is_valid()):
-            jd.save()
-        else:
-            print('not valid')
-        print(request.data)
+        file_uploaded = request.FILES.get('files')
+        
+
+        # jd = JDSerializer(data=request.data)
+        # if(jd.is_valid()):
+        #     jd.save()
+        # else:
+        #     print('not valid')
+        # print(request.data)
         # jsonResponse = json.loads(request.body.decode('utf-8'))
         # print(jsonResponse)
         return Response(request.data)

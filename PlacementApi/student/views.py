@@ -128,9 +128,13 @@ class StudentDetail(APIView):
         return Response(serialized_data.data)
 
     def put(self,request,pk):
+        print('callled')
         student = Student.objects.get(roll__username = pk)
+        print(student)
         update_student = StudentSerializer(instance=student,data = request.data)
+        print(update_student)
         if update_student.is_valid():
+            print('callled')
             update_student.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(update_student.errors,status=status.HTTP_400_BAD_REQUEST)

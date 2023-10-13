@@ -25,6 +25,7 @@ class Drive(models.Model):
     job_type = models.CharField(max_length=15, choices=jtype)
     ctc = models.FloatField(default=0) # Store ctc of the expected ppo offer
     jobProfile = models.CharField(max_length=100, default="SDE1")
+    drive_status = models.CharField(default="pending", choices = [('Pending','pending'),('Approved','approved')], max_length=20)
     courses = models.ManyToManyField(Course)
     # branches = models.ForeignKey(Specialization,on_delete=models.CASCADE)
     branched = models.ManyToManyField(Specialization)

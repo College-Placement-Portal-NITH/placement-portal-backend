@@ -77,6 +77,7 @@ class Student(models.Model):
     total_backlog = models.SmallIntegerField()
     jee_mains_rank = models.IntegerField(null= True) 
     linkedin = models.CharField(default="",max_length=200)
+    resume = models.CharField(default="", max_length=1000)
     pwd = models.BooleanField(default=False)
     disability_type = models.CharField(max_length=50,choices=[('NONE','None'),('HEARING_IMPAIRMENT', 'Hearing Impairment'),('VISUAL_IMPAIRMENT', 'Visual Impairment'),('MOBILITY_IMPAIRMENT', 'Mobility Impairment'),('SPEECH_IMPAIRMENT', 'Speech Impairment'),('COGNITIVE_IMPAIRMENT', 'Cognitive Impairment'),('OTHER', 'Other')])
     disability_percentage = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
