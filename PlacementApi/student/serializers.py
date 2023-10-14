@@ -134,6 +134,7 @@ class StudentSerializer(serializers.ModelSerializer):
         # instance.linkedin = validated_data.get('linkedin',instance.linkedin)
         instance.resume = validated_data.get('resume', instance.resume)
         instance.save()
+        print(instance)
         return instance
 
 
@@ -182,7 +183,7 @@ class StudentTPOSerializer(StudentSerializer):
         except:
             return "Clusters were not chosen by you!! Please select your clusters and then come back"
 
-        placed = Placed.objects.filter(student = student_placement)
+        placed = Placed.objects.get(student = student_placement)
         clusters_list = []
         for placement in placed:
             obj = {}

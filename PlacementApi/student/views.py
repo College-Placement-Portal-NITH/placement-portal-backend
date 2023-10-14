@@ -166,12 +166,14 @@ class StudentDetail(APIView):
 
     def put(self,request,pk):
         print('callled')
-        student = Student.objects.get(roll__username = pk)
+        student = Student.objects.all().get(roll__username = pk)
         print(student)
         update_student = StudentSerializer(instance=student,data = request.data)
+        print('STUDENTTTTTT')
         print(update_student)
+        print('STUDENTTTTTT')
         if update_student.is_valid():
-            print('callled')
+            print('validddd')
             update_student.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(update_student.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -220,7 +222,7 @@ class StudentPlacementDetail(APIView):
         return Response(serialized_data.data)
 
     def put(self,request,pk):
-        student_placement = StudentPlacement.objects.get(student__roll__username = pk)
+        student_placement = StudentPlacement.objects.filter(student__roll__username = pk)
         update_student_placememt = StudentPlacementSerializer(instance=student_placement,data = request.data)
         if update_student_placememt.is_valid():
             update_student_placememt.save()
